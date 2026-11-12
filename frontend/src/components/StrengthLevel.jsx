@@ -14,6 +14,7 @@ import { strengthLevel, strengthLevels, liftOf, LEVELS, LEVEL_NAME, sexOf } from
 import Icon from './Icon.jsx'
 import { Button, Segmented, Stepper } from './ui.jsx'
 import { isOn } from '../lib/modules.js'
+import { ACTIVITY, activityOf } from '../lib/dots.js'
 
 const weightOf = (lv, w, unit) => (lv.perBell ? t('{0} each', fmtNum(w)) : fmtNum(w)) + ' ' + unit
 
@@ -85,7 +86,7 @@ function AboutYou() {
   const born = Number(S.birthYear) > 0 ? Number(S.birthYear) : null
   return <>
     <h3>{t('About you')}</h3>
-    <div className="muted small" style={{ marginBottom: 14 }}>{t('Only used to grade your strength levels, on this device. Leave it blank if you like.')}</div>
+    <div className="muted small" style={{ marginBottom: 14 }}>{t('Used for your strength levels, DOTS and calorie estimates, on this device only. Leave anything blank.')}</div>
     <div className="about-lbl" id="about-sex">{t('Sex')}</div>
     <Segmented ariaLabelledby="about-sex" options={[{ value: '', label: t('Not set') }, { value: 'female', label: t('Female') }, { value: 'male', label: t('Male') }]}
       value={sexOf(S) || ''} onChange={v => update(s => { if (v) s.sex = v; else delete s.sex })} />
@@ -99,6 +100,45 @@ function AboutYou() {
       {born && <Button size="sm" variant="ghost" icon="xmark" onClick={() => update(s => { delete s.birthYear })}>{t('Clear')}</Button>}
     </div>
     {!born && <div className="small dim about-hint"><Icon name="info" /><span>{t('Not set')}</span></div>}
+    <AboutBody />
+  </>
+}
+
+// Personal fork: height, activity and body fat, for maintenance calories, BMI and FFMI.
+const ACT_SHORT = { 1.2: 'Desk', 1.375: 'Light', 1.55: 'Moderate', 1.725: 'Very', 1.9: 'Athlete' }
+function AboutBody() {
+  const S = useStore(s => s.S)
+  const update = useStore(s => s.update)
+  const cm = Number(S.heightCm) > 0 ? Number(S.heightCm) : null
+  const imperial = S.unit === 'lb'
+  const inches = cm ? Math.round(cm / 2.54) : 70
+  const act = activityOf(S)
+  const bf = Number(S.bodyFat) > 0 ? Number(S.bodyFat) : null
+  return <>
+    <div style={{ height: 16 }} />
+    <div className="about-lbl">{t('Height')}</div>
+    <div className="row" style={{ gap: 8 }}>
+      {imperial
+        ? <Stepper ariaLabel={t('Height')} className={cm ? '' : 'unset'} value={inches} step={1} min={48} max={90} decimal={false} unit="in"
+            onChange={v => update(s => { s.heightCm = Math.round(v * 2.54 * 10) / 10 })} />
+        : <Stepper ariaLabel={t('Height')} className={cm ? '' : 'unset'} value={cm ?? 175} step={1} min={120} max={230} decimal={false} unit="cm"
+            onChange={v => update(s => { s.heightCm = Math.round(v) })} />}
+      {cm && <Button size="sm" variant="ghost" icon="xmark" onClick={() => update(s => { delete s.heightCm })}>{t('Clear')}</Button>}
+    </div>
+    <div className="small dim about-hint"><span>{cm ? (imperial ? Math.floor(inches / 12) + '′' + (inches % 12) + '″ · ' + Math.round(cm) + ' cm' : Math.floor(cm / 2.54 / 12) + '′' + Math.round(cm / 2.54 % 12) + '″') : t('Not set')}</span></div>
+    <div style={{ height: 16 }} />
+    <div className="about-lbl" id="about-act">{t('Activity outside the gym')}</div>
+    <Segmented ariaLabelledby="about-act" className={act ? '' : 'seg-none'} options={ACTIVITY.map(a => ({ value: a.value, label: t(ACT_SHORT[a.value]) }))}
+      value={act ?? ''} onChange={v => update(s => { s.activity = v })} />
+    <div className="small dim about-hint"><span>{act ? t(ACTIVITY.find(a => a.value === act).key) : t('Not set')}</span></div>
+    <div style={{ height: 16 }} />
+    <div className="about-lbl">{t('Body fat % (optional)')}</div>
+    <div className="row" style={{ gap: 8 }}>
+      <Stepper ariaLabel={t('Body fat %')} className={bf ? '' : 'unset'} value={bf ?? 20} step={0.5} min={3} max={60} unit="%"
+        onChange={v => update(s => { s.bodyFat = v })} />
+      {bf && <Button size="sm" variant="ghost" icon="xmark" onClick={() => update(s => { delete s.bodyFat })}>{t('Clear')}</Button>}
+    </div>
+    <div className="small dim about-hint"><span>{t('From a DEXA scan if you have one. Only used for FFMI.')}</span></div>
   </>
 }
 export const aboutYouSheet = () => useUI.getState().openSheet(() => <AboutYou />)

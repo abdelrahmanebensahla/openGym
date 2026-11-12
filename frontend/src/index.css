@@ -3205,6 +3205,11 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .slevel-src{margin-top:8px}
 .slevel-about{padding:0;border:0;background:none;color:var(--acc-ink);font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
 /* About you: a field's label over it, the "not set" hint on one line with its icon */
+/* personal fork: a Segmented with nothing chosen yet shows no selection */
+.seg.seg-none .seg-sel{opacity:0}
+.kpis.you-two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.kpis.you-two .tile:nth-child(3){border-inline-start:0}
+.kpis.you-two .tile:nth-child(n+3){border-top:var(--hair) solid var(--sep)}
 .about-lbl{margin:0 0 6px;font-size:var(--fs-footnote);line-height:var(--lh-small);color:var(--label-2)}
 .about-hint{display:flex;align-items:center;gap:5px;margin-top:6px}
 .about-hint .icn{flex:none}

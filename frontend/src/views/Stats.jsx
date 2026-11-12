@@ -24,6 +24,7 @@ import { muscleTargetsSheet } from '../components/WeeklySets.jsx'
 import { TARGET_MUSCLES, targetOf, statusOf } from '../lib/muscle-targets.js'
 import { BarRow, StackBar, ChartLegend } from '../components/StatBars.jsx'
 import { StrengthLevelsCard } from '../components/StrengthLevel.jsx'
+import { EnergyCard, DotsCard, BodyNumbersCard } from '../components/YouStats.jsx'
 import BodyMap, { BodyMapLegend } from '../components/BodyMap.jsx'
 import { loadOfWeeklyPlan, loadOfWorkouts, muscleBalanceWindow, rankOf, MUSCLES, MUSCLE_NAME, musclesOf } from '../lib/muscles.js'
 import { fatigueOf, strengthOf, STRENGTH_FLOOR, LB_TO_KG } from '../lib/recovery.js'
@@ -895,6 +896,9 @@ export default function Stats() {
       {lifetime > 0 && <div className="tile wide" data-lifetime-volume><SeasonDeco spot="stats-tile" /><div className="l">{t('Lifted in total')}</div><div className="v">{fmtVol(Math.round(lifetime), S.unit)}</div></div>}
     </div>
 
+    {/* Personal fork: calories burned, and the body numbers when the Body module is off. */}
+    <EnergyCard S={S} />
+    {!bodyOn && <BodyNumbersCard S={S} />}
     {workouts.length > 0 && motivationOn && <StreakCard info={streak} />}
     {/* The month's challenges and the trophy shelf (lib/challenges.js), folded to one line. */}
     {workouts.length > 0 && motivationOn && <ChallengesStatsCard S={S} />}
@@ -941,6 +945,7 @@ export default function Stats() {
       </div>}
       <SeasonDeco spot="stats-web" />
     </div>
+      <BodyNumbersCard S={S} />
       {statsLinks}
     </section>}
 
@@ -1014,6 +1019,7 @@ export default function Stats() {
     </div>
     {(workouts.length > 0 || Object.keys(loadOfWeeklyPlan(S)).length > 0) && <MusclesCard S={S} planFocus={planFocus} />}
     {/* Beginner to Elite for the main lifts (lib/strength-level.js); hidden without a weigh-in. */}
+    <DotsCard S={S} />
     {workouts.length > 0 && on('strength') && <StrengthLevelsCard S={S} />}
     {!effortOn && timeCard && <ExerciseTimeCard S={S} />}
     {!bodyOn && statsLinks}
