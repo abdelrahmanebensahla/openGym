@@ -1,0 +1,11 @@
+# Personal static deploy (vercel.json): only frontend/, catalogue/ and scripts/ are needed.
+# api/ in particular must stay out, or Vercel turns its files into serverless functions.
+/api
+/mcp
+/web
+/website
+/helm
+/kubernetes
+/contrib
+/docs
+/assets
