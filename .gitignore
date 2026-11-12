@@ -52,3 +52,6 @@ frontend/pdf-samples/
 # Cloudflare fallback build (cloudflare/build.sh)
 /dist/
 .wrangler/
+
+# Vercel build output (scripts/vercel-output.mjs)
+.vercel/

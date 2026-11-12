@@ -2,13 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "npm ci --prefix frontend --no-audit --no-fund",
-  "buildCommand": "cd frontend && VITE_STANDALONE=1 npm run build && cd .. && node scripts/catalogue/stage-media.mjs frontend/dist",
-  "outputDirectory": "frontend/dist",
-  "headers": [
-    { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
-    { "source": "/", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
-    { "source": "/index.html", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
-    { "source": "/manifest.json", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
-    { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] }
-  ]
+  "buildCommand": "cd frontend && VITE_STANDALONE=1 npm run build && cd .. && node scripts/catalogue/stage-media.mjs frontend/dist && node scripts/vercel-output.mjs"
 }
