@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { useStore } from '../store/useStore.js'
 import { t } from '../lib/i18n.js'
 import { MOBILE } from '../lib/mobile.js'
-import { DEMO } from '../lib/demo.js'
+import { DEMO, NO_SERVER } from '../lib/demo.js'
 import { platformNow } from '../lib/platform-now.js'
 import { api } from '../lib/api.js'
 import { MODULES, GROUPS, PRESETS, isOn, presetOf, presetModules, applyPreset, setModule, turnedOff, onCount } from '../lib/modules.js'
@@ -35,7 +35,7 @@ function useConnections() {
       // An Apple Watch that has reported in, or a Garmin the watch link found (docs/GARMIN.md).
       if (readWatchStatus() || readGarminLink()) put({ watch: true })
     }
-    if (user && !DEMO) {
+    if (user && !NO_SERVER) {
       import('../lib/watch-relay.js').then(m => m.relayLinks()).then(links => { if (links.length) put({ watch: true }) }).catch(() => {})
       if ((config?.integrations?.providers || []).includes('webhook')) {
         api('/api/integrations').then(d => {
