@@ -1,6 +1,0 @@
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": null,
-  "installCommand": "npm ci --prefix frontend --no-audit --no-fund",
-  "buildCommand": "cd frontend && VITE_STANDALONE=1 npm run build && cd .. && node scripts/catalogue/stage-media.mjs frontend/dist && node scripts/vercel-output.mjs"
-}

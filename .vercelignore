@@ -1,9 +1,0 @@
-# Personal static deploy (vercel.json). frontend/ also imports from api/, so api/ stays.
-/mcp
-/web
-/website
-/helm
-/kubernetes
-/contrib
-/docs
-/assets
